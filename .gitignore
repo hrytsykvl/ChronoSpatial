@@ -1,0 +1,23 @@
+# Build output
+bin/
+obj/
+artifacts/
+publish/
+
+# BenchmarkDotNet raw output (curated reports live in docs/benchmarks)
+BenchmarkDotNet.Artifacts/
+
+# IDE
+.idea/
+.vs/
+*.user
+*.suo
+*.DotSettings.user
+
+# Test results
+TestResults/
+*.trx
+
+# OS
+Thumbs.db
+.DS_Store
