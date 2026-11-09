@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>SpatialEngine.Simulation</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpatialEngine.Core\SpatialEngine.Core.csproj" />
+  </ItemGroup>
+
+</Project>
