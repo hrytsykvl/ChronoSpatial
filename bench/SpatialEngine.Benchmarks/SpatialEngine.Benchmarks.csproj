@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>SpatialEngine.Benchmarks</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Condition="'$(OS)' == 'Windows_NT'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SpatialEngine.Core\SpatialEngine.Core.csproj" />
+    <ProjectReference Include="..\..\src\SpatialEngine.Simulation\SpatialEngine.Simulation.csproj" />
+  </ItemGroup>
+
+</Project>
