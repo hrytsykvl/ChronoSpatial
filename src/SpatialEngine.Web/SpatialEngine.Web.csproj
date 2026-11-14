@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <RootNamespace>SpatialEngine.Web</RootNamespace>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <WasmEnableSIMD>true</WasmEnableSIMD>
+    <!--
+      This app only ever runs in a browser, so CA1416's warning that [JSExport] is browser-only is noise:
+      the target framework is plain net10.0 rather than net10.0-browser, which is what triggers it.
+    -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    AOT applies to `dotnet publish` only; `dotnet run` always uses the IL interpreter, which is
+    roughly an order of magnitude slower. Measure the simulation against a published build.
+  -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <WasmStripILAfterAOT>true</WasmStripILAfterAOT>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpatialEngine.Core\SpatialEngine.Core.csproj" />
+    <ProjectReference Include="..\SpatialEngine.Simulation\SpatialEngine.Simulation.csproj" />
+  </ItemGroup>
+
+</Project>

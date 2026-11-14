@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SpatialEngine.Core/SpatialEngine.Core.csproj" />
+    <Project Path="src/SpatialEngine.Simulation/SpatialEngine.Simulation.csproj" />
+    <Project Path="src/SpatialEngine.Web/SpatialEngine.Web.csproj" />
+  </Folder>
+  <Folder Name="/bench/">
+    <Project Path="bench/SpatialEngine.Benchmarks/SpatialEngine.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SpatialEngine.Tests/SpatialEngine.Tests.csproj" />
+  </Folder>
+</Solution>
