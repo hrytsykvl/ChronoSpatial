@@ -1,0 +1,259 @@
+:root {
+    --bg: #0b0e14;
+    --panel: #141821;
+    --panel-2: #1b2130;
+    --line: #2a3344;
+    --text: #d7dee9;
+    --muted: #8795ab;
+    --accent: #5abeff;
+    --accent-2: #ffc440;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+}
+
+#app {
+    height: 100%;
+}
+
+.boot {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    color: var(--muted);
+}
+
+.shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas:
+        "header panel"
+        "stage  panel";
+    gap: 16px;
+    height: 100%;
+    padding: 16px;
+}
+
+header {
+    grid-area: header;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+}
+
+header p {
+    margin: 4px 0 0;
+    color: var(--muted);
+}
+
+.stage {
+    grid-area: stage;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+}
+
+.canvas-stack {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    background: #0d1017;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.canvas-stack canvas {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: min(100%, 100cqh);
+    height: auto;
+    aspect-ratio: 1 / 1;
+    image-rendering: pixelated;
+}
+
+#overlay {
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.stage-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(11, 14, 20, 0.82);
+    color: var(--muted);
+}
+
+.hint {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.panel {
+    grid-area: panel;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.panel section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.panel h2 {
+    margin: 0 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+}
+
+.panel label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.panel output {
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+.panel input[type="range"] {
+    width: 100%;
+    margin: 6px 0 0;
+    accent-color: var(--accent);
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.row.toggles {
+    margin-top: 12px;
+    flex-direction: column;
+}
+
+label.checkbox {
+    justify-content: flex-start;
+    gap: 8px;
+    color: var(--text);
+}
+
+label.checkbox input {
+    accent-color: var(--accent);
+}
+
+button {
+    flex: 1 1 auto;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+}
+
+button:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #06121c;
+    font-weight: 600;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 12px;
+    margin: 0;
+}
+
+.stats dt {
+    color: var(--muted);
+}
+
+.stats dd {
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-2);
+}
+
+.note {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+code {
+    color: var(--accent);
+    font-size: 11px;
+}
+
+#blazor-error-ui {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 14px;
+    background: #4a1d1d;
+    color: #ffd9d9;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    float: right;
+}
+
+@media (max-width: 1000px) {
+    .shell {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "header" "stage" "panel";
+        grid-template-rows: auto auto auto;
+        height: auto;
+    }
+}

@@ -1,0 +1,138 @@
+@using SpatialEngine.Web.Interop
+
+<section>
+    <h2>Simulation</h2>
+
+    <div class="row buttons">
+        <button class="primary" @onclick="TogglePause" disabled="@(!Enabled)">
+            @(_paused ? "Resume" : "Pause")
+        </button>
+        <button @onclick="TriggerHotspot" disabled="@(!Enabled)">Trigger hotspot</button>
+        <button @onclick="ClearHotspots" disabled="@(!Enabled)">Clear wells</button>
+    </div>
+
+    <label>
+        Agents
+        <output>@_agentCount.ToString("N0")</output>
+    </label>
+    <input type="range" min="1000" max="150000" step="1000" value="@_agentCount"
+           @onchange="OnAgentCountChanged" disabled="@(!Enabled)" />
+
+    <label>
+        Tick rate
+        <output>@_tickRate Hz</output>
+    </label>
+    <input type="range" min="20" max="120" step="5" value="@_tickRate"
+           @onchange="OnTickRateChanged" disabled="@(!Enabled)" />
+</section>
+
+<section>
+    <h2>Tree parameters</h2>
+
+    <label>
+        Max depth
+        <output>@_maxDepth</output>
+    </label>
+    <input type="range" min="2" max="11" step="1" value="@_maxDepth"
+           @onchange="OnMaxDepthChanged" disabled="@(!Enabled)" />
+
+    <label>
+        Node capacity
+        <output>@_nodeCapacity</output>
+    </label>
+    <input type="range" min="2" max="64" step="1" value="@_nodeCapacity"
+           @onchange="OnNodeCapacityChanged" disabled="@(!Enabled)" />
+
+    <div class="row toggles">
+        <label class="checkbox">
+            <input type="checkbox" checked="@_showGrid" @onchange="OnShowGridChanged" />
+            Show tree grid
+        </label>
+        <label class="checkbox">
+            <input type="checkbox" checked="@_leavesOnly" @onchange="OnLeavesOnlyChanged" />
+            Leaves only
+        </label>
+    </div>
+
+    <p class="note">
+        Raising depth or lowering capacity subdivides more aggressively: queries prune harder but the tree
+        splits and merges more as agents cross boundaries. The grid redraws only when the topology actually
+        changes.
+    </p>
+</section>
+
+@code {
+    /// <summary>Set once the simulation host exists; until then every control is inert.</summary>
+    [Parameter]
+    public bool Enabled { get; set; }
+
+    private bool _paused;
+    private int _agentCount = 25_000;
+    private int _tickRate = 60;
+    private int _maxDepth = 8;
+    private int _nodeCapacity = 16;
+    private bool _showGrid = true;
+    private bool _leavesOnly;
+
+    private void TogglePause()
+    {
+        _paused = !_paused;
+        SimulationBridge.SetPaused(_paused);
+    }
+
+    private void TriggerHotspot() => SimulationBridge.TriggerHotspotAtProbe();
+
+    private void ClearHotspots() => SimulationBridge.ClearHotspots();
+
+    private void OnAgentCountChanged(ChangeEventArgs e)
+    {
+        if (TryRead(e, out int value))
+        {
+            _agentCount = value;
+            SimulationBridge.SetAgentCount(value);
+        }
+    }
+
+    private void OnTickRateChanged(ChangeEventArgs e)
+    {
+        if (TryRead(e, out int value))
+        {
+            _tickRate = value;
+            SimulationBridge.SetTickRate(value);
+        }
+    }
+
+    private void OnMaxDepthChanged(ChangeEventArgs e)
+    {
+        if (TryRead(e, out int value))
+        {
+            _maxDepth = value;
+            SimulationBridge.SetTreeParams(_maxDepth, _nodeCapacity);
+        }
+    }
+
+    private void OnNodeCapacityChanged(ChangeEventArgs e)
+    {
+        if (TryRead(e, out int value))
+        {
+            _nodeCapacity = value;
+            SimulationBridge.SetTreeParams(_maxDepth, _nodeCapacity);
+        }
+    }
+
+    private void OnShowGridChanged(ChangeEventArgs e)
+    {
+        _showGrid = e.Value is bool b && b;
+        SimulationBridge.SetShowGrid(_showGrid);
+    }
+
+    private void OnLeavesOnlyChanged(ChangeEventArgs e)
+    {
+        _leavesOnly = e.Value is bool b && b;
+        SimulationBridge.SetGridLeavesOnly(_leavesOnly);
+    }
+
+    private static bool TryRead(ChangeEventArgs e, out int value)
+        => int.TryParse(e.Value?.ToString(), out value);
+}
+

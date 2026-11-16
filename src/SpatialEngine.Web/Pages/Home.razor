@@ -1,0 +1,74 @@
+@page "/"
+@using SpatialEngine.Web.Interop
+
+<PageTitle>ZeroQuad - Dynamic Spatial Index Simulator</PageTitle>
+
+<div class="shell">
+    <header>
+        <h1>ZeroQuad</h1>
+        <p>Zero-allocation flat quadtree over a live swarm of moving agents</p>
+    </header>
+
+    <div class="stage">
+        <div class="canvas-stack">
+            <canvas id="agents" width="900" height="900"></canvas>
+            <canvas id="overlay" width="900" height="900"></canvas>
+            @if (!_started)
+            {
+                <div class="stage-overlay">@_status</div>
+            }
+        </div>
+        <p class="hint">
+            Drag on the canvas to place the search radius &middot; scroll to resize it &middot; double-click to clear
+        </p>
+    </div>
+
+    <aside class="panel">
+        <ControlPanel Enabled="_started" />
+
+        <section>
+            <h2>Telemetry</h2>
+            <dl class="stats">
+                <dt>FPS</dt><dd id="stat-fps">-</dd>
+                <dt>Tick total</dt><dd id="stat-tick">-</dd>
+                <dt>Movement</dt><dd id="stat-move">-</dd>
+                <dt>Index update</dt><dd id="stat-update">-</dd>
+                <dt>Query</dt><dd id="stat-query">-</dd>
+                <dt>Query hits</dt><dd id="stat-hits">-</dd>
+                <dt>Agents</dt><dd id="stat-agents">-</dd>
+                <dt>Tree nodes</dt><dd id="stat-nodes">-</dd>
+                <dt>Tree depth</dt><dd id="stat-depth">-</dd>
+                <dt>Stayed in leaf</dt><dd id="stat-dirty">-</dd>
+            </dl>
+            <p class="note">
+                Timings come from <code>Stopwatch.GetTimestamp()</code> around the engine calls themselves, and
+                are written straight into the DOM from JavaScript, so reading them never re-renders a component.
+            </p>
+        </section>
+    </aside>
+</div>
+
+@code {
+    private bool _started;
+    private string _status = "Starting simulation...";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _started)
+        {
+            return;
+        }
+
+        try
+        {
+            await SimulationBridge.StartAsync(width: 900, height: 900, agentCount: 25_000);
+            _started = true;
+        }
+        catch (Exception ex)
+        {
+            _status = $"Failed to start: {ex.Message}";
+        }
+
+        StateHasChanged();
+    }
+}
